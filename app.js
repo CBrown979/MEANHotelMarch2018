@@ -12,4 +12,22 @@
 
 // goodbye();
 
-console.log("It works!"); //based on package.json dependencies scripts section -- from command line, entered npm start
+// console.log("It works!"); //based on package.json dependencies scripts section -- from command line, entered npm start
+
+//Express
+var express = require('express');
+var app = express(); //initialize in order to create an app
+
+app.set('port', 3000);
+
+// app.listen(3000); //listen for requests without set -- upgrade below
+var server = app.listen(app.get('port'), function(){ //confirms app.listen has been called - the .listen method can accept a callback
+    var port = server.address().port;
+    // console.log('Magic happens on port ' + app.get('port')); -- ARCHIVED
+    console.log("Magic happens on port" + port);
+});
+
+// console.log("Me first!"); // added to verify the listen method is asynchronous
+
+//the app.listen method returns an object we can use to access various properties of the server - such as the port
+//to do this, we need to assign the app.listen method to a variable (revised above upgraded app.listen)
