@@ -17,17 +17,41 @@
 //Express
 var express = require('express');
 var app = express(); //initialize in order to create an app
+var path = require('path');
 
-app.set('port', 3000);
+app.set('port', process.env.PORT);
 
-// app.listen(3000); //listen for requests without set -- upgrade below
+app.get('/', function(req, res){
+    console.log("GET the homepage");
+    res.status(200);
+    // res.send("Express Yourself");
+    res.sendFile(path.join(__dirname, 'public', 'index.html'));
+});
+
+app.get('/json', function(req, res){
+    console.log("GET the json");
+    res.status(200);
+    res.json( {"jsonData" : true});
+});
+
+//configure Express to return a file (delivered as is) to the Browser - instead of .send, use .sendFile method and pass it the path of the file you want to send
+app.get('/file', function(req, res){
+    console.log("GET the file");
+    res.status(200);
+    res.sendFile(path.join(__dirname, 'app.js')); //to find the path use method .join to join in a number of different arguments used to create the file path
+    //__dirname finds the current directory we are working in (finds the directory of the app.js file); pass in this file -- will return app.js to the browser when you request /file 
+});
+
+// app.listen(3000); //listen for requests without app.set -- upgrade below
 var server = app.listen(app.get('port'), function(){ //confirms app.listen has been called - the .listen method can accept a callback
     var port = server.address().port;
     // console.log('Magic happens on port ' + app.get('port')); -- ARCHIVED
-    console.log("Magic happens on port" + port);
+    console.log("Magic happens on port " + port);
 });
 
 // console.log("Me first!"); // added to verify the listen method is asynchronous
 
 //the app.listen method returns an object we can use to access various properties of the server - such as the port
 //to do this, we need to assign the app.listen method to a variable (revised above upgraded app.listen)
+
+//
