@@ -21,6 +21,13 @@ var path = require('path');
 
 app.set('port', process.env.PORT);
 
+//IMPORTANT: runs in order they're put in the code; our middleware is above where we define the static path - if below, we would not get all the static files logged
+//TIP: app.use('/css', function(req, res, next){ middleware will only put out to the console any requests where the path starts with /css 
+app.use(function(req, res, next){ //this will run our middleware - takes 3 arguments
+    console.log(req.method, req.url);//will show 2 properties of the request object - the requested method (GET, etc) and requested URL
+    next();
+});
+
 // in public folder: this is where we will store all of our static resources
 //after the port definition but before the root is defined, we define the static folder using the method app.use which introduces middleware
 app.use(express.static(path.join(__dirname, 'public'))); //when express receives a request for a root: 1)it will check to see if that root is matched by any of the files within that public folder; if it finds a match, it will deliver that file directly to the browser without any need to add in any extra routes
