@@ -8,8 +8,26 @@ var hotelData = require('../data/hotel-data.json'); //added before the first mod
 
 module.exports.hotelsGetAll = function(req, res){
     console.log("GET the hotels");
+    console.log(req.query);//Express automatically slices/dices all query string parameters and adds them to the request object in a property called query
+    
+    //set default values for offset and count - to slice hotelData array
+    var offset = 0;
+    var count = 5;
+    
+    var returnData = hotelData.slice(offset, offset+count);//this line takes the hotelData array from the .json file and using the offset value as the starting point, and count value to get the end point of the slice; and returning that final value into a new variable called returnData
+    
+    //now must extract the values from the req.query object; and check that those properties actually exist in the query object
+    if (req.query && req.query.offset){//checks that query property exists on the request object - if yes, then checks if query property has its own property of offset - if both exist, we have an offset parameter from the queryString
+        offset = parseInt(req.query.offset, 10);//takes the offset value of the queryString and sets it as being the offset value in our controller; and since queryString values are strings, must run through parseInt to make it a number
+    }
+    
+    if (req.query && req.query.count){//checks that query property exists on the request object - if yes, then checks if query property has its own property of offset - if both exist, we have an offset parameter from the queryString
+        count = parseInt(req.query.count, 10);//takes the offset value of the queryString and sets it as being the offset value in our controller; and since queryString values are strings, must run through parseInt to make it a number
+    }
+    
     res.status(200);
-    res.json( hotelData );
+    // res.json( hotelData );
+    res.json( returnData ); //
 };
 
 module.exports.hotelsGetOne = function(req, res){
@@ -18,4 +36,19 @@ module.exports.hotelsGetOne = function(req, res){
     console.log("GET hotelId", hotelId);
     res.status(200);
     res.json( thisHotel ); //test localhost:3000/api/hotels/5, or 3, 1 to get individual hotel info
+};
+
+//passing data from websites to servers
+//Two Most Common: queryStrings for GET requests; and formBodies for POST requests
+//To set up pagination (to not return everything), must set up a count of # of hotels to return at once; and then offset (the starting position)
+//sample url: localhost:3000/api/hotels?offset=2&count=2
+//queryStrings commonly used when forms have a GET method - that's how they send data to the server, they get all the form info and send same as queryStrings on the URL
+//when a form is POSTed, the field is added to the body of the request
+//unlike queryStrings, Express cannot notably deal with a posted form, body-parser middleware must be installed using npm (npm install --save body-parser), then require it in app.js
+
+module.exports.hotelsAddOne = function(req, res){
+  console.log("POST new hotel");
+  console.log(req.body);//this is where the bodyParser middleware we've applied will put all the data that it parses out of the posted from
+  res.status(200);
+  res.json(req.body);
 };

@@ -18,6 +18,7 @@
 var express = require('express');
 var app = express(); //initialize in order to create an app
 var path = require('path');
+var bodyParser = require('body-parser');
 
 var routes = require('./api/routes'); //to require the routes folder
 
@@ -40,7 +41,11 @@ app.use(express.static(path.join(__dirname, 'public'))); //when express receives
 //we need to specify the folder structure we want before we define the express static method
 //when launched, express will look for static routes that start with /public
 
-//to tell Express to use the routes - we'll set the app.use command below where we set the public folder to be a static path
+//2nd example: this middleware needs to run before api routes run --> does not need to run on any of the static paths
+app.use(bodyParser.urlencoded({ extended: false })); //extended:false means only need strings & arrays (posted) from our form bodies; true gives access to other data types, typically not needed
+//this urlencoded method on bodyParser is used b/c this method is how html forms are actually sent
+
+//first example: to tell Express to use the routes - we'll set the app.use command below where we set the public folder to be a static path
 app.use('/api', routes); //Express will look inside the routes file for any route (if only '/' is used)
 
 // app.get('/', function(req, res){ //due to adding the app use method, we had to get rid of this current homepage route to ensure we are getting the index.html file from the above static approach

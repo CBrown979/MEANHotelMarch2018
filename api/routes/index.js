@@ -22,6 +22,8 @@ router.route('/hotels/:hotelId');//to define parameters in express, use colon an
 //and the hotelId is a parameter that controller can access - 1)create a controller to work with this route - define controller name
 router.get(ctrlHotels.hotelsGetOne); //now create corresponding controller in hotels.controllers.js file
 
+router.route('/hotels/new');
+router.post(ctrlHotels.hotelsAddOne);
 
 // router.post(function(req, res){ // POST method
 //     console.log("POST the json route");
