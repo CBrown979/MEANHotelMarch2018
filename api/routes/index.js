@@ -18,6 +18,11 @@ router.get(ctrlHotels.hotelsGetAll); //to map controller to a route
 //     res.json( {"jsonData" : true} );
 // });
 
+router.route('/hotels/:hotelId');//to define parameters in express, use colon and parameter name - now Express will match any routes of URLs that come in with /api/hotels/somethingElse to this route; 
+//and the hotelId is a parameter that controller can access - 1)create a controller to work with this route - define controller name
+router.get(ctrlHotels.hotelsGetOne); //now create corresponding controller in hotels.controllers.js file
+
+
 // router.post(function(req, res){ // POST method
 //     console.log("POST the json route");
 //     res.status(200);
