@@ -19,9 +19,10 @@ var express = require('express');
 var app = express(); //initialize in order to create an app
 var path = require('path');
 
-var routes = require('./routes'); //to require the routes folder
+var routes = require('./api/routes'); //to require the routes folder
 
 app.set('port', process.env.PORT);
+//app.set('host', process.env.IP);
 
 //IMPORTANT: runs in order they're put in the code; our middleware is above where we define the static path - if below, we would not get all the static files logged
 //TIP: app.use('/css', function(req, res, next){ middleware will only put out to the console any requests where the path starts with /css 
