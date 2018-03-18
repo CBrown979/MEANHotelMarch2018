@@ -4,7 +4,7 @@
  *
  * Includes Sizzle.js
  * https://sizzlejs.com/
- *
+ * 
  * Copyright JS Foundation and other contributors
  * Released under the MIT license
  * https://jquery.org/license
