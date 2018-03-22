@@ -45,7 +45,9 @@ module.exports.hotelsGetOne = function(req, res){
     // var thisHotel = hotelData[hotelId];//variable holds info about individual hotel, and uses the URL parameter as the location index on the hotelData array (which is the json object (an array itself))
     console.log("GET hotelId", hotelId);
     
-    collection.findOne({}, function(err, doc){
+    collection.findOne({
+        _id : ObjectId(hotelId)
+    }, function(err, doc){
         res.status(200);
         res.json( doc ); //test localhost:3000/api/hotels/5, or 3, 1 to get individual hotel info
     })
