@@ -4,9 +4,13 @@
 //Once route is defined, to use the controller instead of the inline function, we must:
 //require the controllers file into the routes file (index.js), so it knows where the functions are & has access to the exported functions from the controllers.js file
 
+var dbconn = require('../data/dbconnection.js');
 var hotelData = require('../data/hotel-data.json'); //added before the first module.exports
 
 module.exports.hotelsGetAll = function(req, res){
+    var db = dbconn.get();
+    console.log("db", db);
+    
     console.log("GET the hotels");
     console.log(req.query);//Express automatically slices/dices all query string parameters and adds them to the request object in a property called query
     
