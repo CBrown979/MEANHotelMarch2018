@@ -9,18 +9,15 @@ var hotelData = require('../data/hotel-data.json'); //added before the first mod
 
 module.exports.hotelsGetAll = function(req, res){
     var db = dbconn.get();
-    console.log("db", db);
+    var collection = db.collection("hotels");
     
-    console.log("GET the hotels");
-    console.log(req.query);//Express automatically slices/dices all query string parameters and adds them to the request object in a property called query
-    
-    //set default values for offset and count - to slice hotelData array
+    // //set default values for offset and count - to slice hotelData array
     var offset = 0;
     var count = 5;
     
-    var returnData = hotelData.slice(offset, offset+count);//this line takes the hotelData array from the .json file and using the offset value as the starting point, and count value to get the end point of the slice; and returning that final value into a new variable called returnData
+    // var returnData = hotelData.slice(offset, offset+count);//this line takes the hotelData array from the .json file and using the offset value as the starting point, and count value to get the end point of the slice; and returning that final value into a new variable called returnData
     
-    //now must extract the values from the req.query object; and check that those properties actually exist in the query object
+    // //now must extract the values from the req.query object; and check that those properties actually exist in the query object
     if (req.query && req.query.offset){//checks that query property exists on the request object - if yes, then checks if query property has its own property of offset - if both exist, we have an offset parameter from the queryString
         offset = parseInt(req.query.offset, 10);//takes the offset value of the queryString and sets it as being the offset value in our controller; and since queryString values are strings, must run through parseInt to make it a number
     }
@@ -29,17 +26,30 @@ module.exports.hotelsGetAll = function(req, res){
         count = parseInt(req.query.count, 10);//takes the offset value of the queryString and sets it as being the offset value in our controller; and since queryString values are strings, must run through parseInt to make it a number
     }
     
-    res.status(200);
-    // res.json( hotelData );
-    res.json( returnData ); //
+    // var docs = collection.find();
+    collection.find();
+    collection.skip(offset);//# of documents we will skip
+    collection.limit(count);//# of documents we want to return
+    collection.toArray(function(err, docs){
+        console.log("Found hotels", docs);
+        res.status(200);
+        res.json(docs);
+    });
 };
 
 module.exports.hotelsGetOne = function(req, res){
+    var db = dbconn.get();
+    var collection = db.collection('hotels');
+    
     var hotelId = req.params.hotelId; //Id will be on the request object; URL parameters are put into another object on the request object called params; and then our URL parameter will be in there (so we type hotelId);
-    var thisHotel = hotelData[hotelId];//variable holds info about individual hotel, and uses the URL parameter as the location index on the hotelData array (which is the json object (an array itself))
+    // var thisHotel = hotelData[hotelId];//variable holds info about individual hotel, and uses the URL parameter as the location index on the hotelData array (which is the json object (an array itself))
     console.log("GET hotelId", hotelId);
-    res.status(200);
-    res.json( thisHotel ); //test localhost:3000/api/hotels/5, or 3, 1 to get individual hotel info
+    
+    collection.findOne({}, function(err, doc){
+        res.status(200);
+        res.json( doc ); //test localhost:3000/api/hotels/5, or 3, 1 to get individual hotel info
+    })
+    
 };
 
 //passing data from websites to servers
