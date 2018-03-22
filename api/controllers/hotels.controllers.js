@@ -63,8 +63,28 @@ module.exports.hotelsGetOne = function(req, res){
 //unlike queryStrings, Express cannot notably deal with a posted form, body-parser middleware must be installed using npm (npm install --save body-parser), then require it in app.js
 
 module.exports.hotelsAddOne = function(req, res){
+  var db = dbconn.get();
+  var collection = db.collection('hotels');
+  var newHotel;
   console.log("POST new hotel");
-  console.log(req.body);//this is where the bodyParser middleware we've applied will put all the data that it parses out of the posted from
-  res.status(200);
-  res.json(req.body);
+  
+  if(req.body && req.body.name && req.body.stars){
+      newHotel = req.body;
+      newHotel.stars = parseInt(req.body.stars, 10);
+      collection.insertOne(newHotel, function(err, response){
+          console.log(response);//related to operations, but info obtained is not really needed
+          console.log(response.ops);//document that was created in property called ops on response object
+          res.status(201);//created
+          res.json(response.ops);
+      });
+    //   console.log(newHotel);
+    //   console.log(req.body); //this is where the bodyParser middleware we've applied will put all the data that it parses out of the posted from
+    //   res.json(req.body);
+    //   res.json(newHotel);
+  } else {
+      console.log("Data missing from body");
+      res.status(400);
+      res.json({ message : "Required data missing from body"});
+  }
+  
 };
