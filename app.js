@@ -15,7 +15,8 @@
 // console.log("It works!"); //based on package.json dependencies scripts section -- from command line, entered npm start
 
 //Express
-require('./api/data/dbconnection.js').open();
+// require('./api/data/dbconnection.js').open();
+require('./api/data/db.js'); //to use new mongoose connection
 var express = require('express');
 var app = express(); //initialize in order to create an app
 var path = require('path');
