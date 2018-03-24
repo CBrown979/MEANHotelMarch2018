@@ -1,3 +1,5 @@
+//this file manages the connection using mongoose to mongodb
+
 var mongoose = require('mongoose');
 var dburl = 'mongodb://localhost:27017/meanhotel';
 
@@ -35,3 +37,6 @@ process.once('SIGUSR2', function(){
         process.kill(process.pid, 'SIGUSR2');
     });
 });
+
+// Bring in Schemas and Models
+require('./hotels.model.js');
