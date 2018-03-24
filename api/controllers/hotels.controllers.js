@@ -187,10 +187,7 @@ module.exports.hotelsAddOne = function(req, res){
             res.status(201);//resource has been created
             res.json(hotel);
         }
-    })
-
-
-
+    });
 
 //in lecture32, the below was removed as it's from the native driver
 //   var db = dbconn.get();
@@ -216,5 +213,62 @@ module.exports.hotelsAddOne = function(req, res){
 //       res.status(400);
 //       res.json({ message : "Required data missing from body"});
 //   }
-  
 };
+
+module.exports.hotelsUpdateOne = function(req, res){
+    var hotelId = req.params.hotelId; //Id will be on the request object; URL parameters are put into another object on the request object called params; and then our URL parameter will be in there (so we type hotelId);
+    console.log("GET hotelId", hotelId);
+    
+    Hotel.findById(hotelId);
+    Hotel.select("-reviews -rooms")//to exclude fields, use -fieldname
+    Hotel.exec(function(err, doc){
+        var response = {//refactor response so there are so many if/else statements
+            status : 200,
+            message : doc
+        };
+        if(err){
+            console.log("Error finding hotel");
+            res.status(500);//internal server error
+            res.json(err);
+        } else if(!doc){
+            response.status = 404;
+            response.message = {
+                "message": "Hotel ID not found"
+            };
+        } 
+        if(response.status != 200){
+            res.status(response.status);
+            res.json(response.message);
+        } else {//update the data in the model instance
+            doc.name = req.body.name;
+            doc.description = req.body.description;
+            doc.stars = parseInt(req.body.stars,10);
+            doc.services = _splitArray(req.body.services);
+            doc.photos = _splitArray(req.body.photos);
+            doc.currency = req.body.currency;
+            doc.location = {
+                address : req.body.address,
+                coordinates : [
+                    parseFloat(req.body.lng), 
+                    parseFloat(req.body.lat)
+                ]
+              };
+              
+              doc.save(function(err, hotelUpdated){//saving the model instance
+                  if(err){
+                      res.status(500)
+                      res.json(err);
+                  } else {//put request should return a 204 response if successful
+                      res.status(204)
+                      res.json(); //send empty response if successful
+                  }
+              });
+            }
+    });
+};
+
+//REMINDER & TIPS: 
+//subdocuments can only be accessed thru their parent document
+//subdocuments cannot be saved by themselves, only the parent can be saved
+//You can try combining parts of the code from finding a specific review, updating a hotel and creating a new review
+//with bits of the code altogether, should be str8 frwd to create the controller for updating review

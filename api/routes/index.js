@@ -23,6 +23,7 @@ router.post(ctrlHotels.hotelsAddOne);
 router.route('/hotels/:hotelId');//to define parameters in express, use colon and parameter name - now Express will match any routes of URLs that come in with /api/hotels/somethingElse to this route; 
 //and the hotelId is a parameter that controller can access - 1)create a controller to work with this route - define controller name
 router.get(ctrlHotels.hotelsGetOne); //now create corresponding controller in hotels.controllers.js file
+router.put(ctrlHotels.hotelsUpdateOne);
 
 // router.route('/hotels/new');
 // router.post(ctrlHotels.hotelsAddOne);
@@ -43,6 +44,7 @@ router.post(ctrlReviews.reviewAddOne);
 //GET /api/hotels/12345/reviews/54321
 router.route('/hotels/:hotelId/reviews/:reviewId');
 router.get(ctrlReviews.reviewsGetOne);
+router.put(ctrlReviews.reviewsUpdateOne);
 
 
 module.exports = router;
