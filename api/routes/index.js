@@ -6,7 +6,7 @@ var express = require('express');
 var router = express.Router();
 
 var ctrlHotels = require('../controllers/hotels.controllers.js');
-
+var ctrlReviews = require('../controllers.reviews.controllers.js');
 //define your route, then define your method, then define the function you want to run
 // router.route('/json');
 
@@ -30,5 +30,15 @@ router.post(ctrlHotels.hotelsAddOne);
 //     res.status(200);
 //     res.json( {"jsonData" : "POST received"} );
 // });
+
+//Review routes to get a single hotel
+//GET /api/hotels/12345/reviews
+router.route('/hotels/:hotelId/reviews');
+router.get(ctrlReviews.reviewsGetAll);
+
+//GET /api/hotels/12345/reviews/54321
+router.route('/hotels/:hotelId/reviews/:reviewId');
+router.get(ctrlReviews.reviewsGetOne);
+
 
 module.exports = router;
