@@ -4,12 +4,18 @@
 //Once route is defined, to use the controller instead of the inline function, we must:
 //require the controllers file into the routes file (index.js), so it knows where the functions are & has access to the exported functions from the controllers.js file
 
-var dbconn = require('../data/dbconnection.js');
-var hotelData = require('../data/hotel-data.json'); //added before the first module.exports
+//below to be replaced with Mongoose - Lecture28
+// var dbconn = require('../data/dbconnection.js');
+// var ObjectId = require('mongodb').ObjectId;
+// var hotelData = require('../data/hotel-data.json'); //added before the first module.exports
+
+var mongoose = require('mongoose');
+var Hotel = mongoose.model('Hotel');
 
 module.exports.hotelsGetAll = function(req, res){
-    var db = dbconn.get();
-    var collection = db.collection("hotels");
+    //for Lecture28, below has been removed as they are references to the native driver
+    // var db = dbconn.get();
+    // var collection = db.collection("hotels");
     
     // //set default values for offset and count - to slice hotelData array
     var offset = 0;
@@ -26,31 +32,47 @@ module.exports.hotelsGetAll = function(req, res){
         count = parseInt(req.query.count, 10);//takes the offset value of the queryString and sets it as being the offset value in our controller; and since queryString values are strings, must run through parseInt to make it a number
     }
     
-    // var docs = collection.find();
-    collection.find();
-    collection.skip(offset);//# of documents we will skip
-    collection.limit(count);//# of documents we want to return
-    collection.toArray(function(err, docs){
-        console.log("Found hotels", docs);
-        res.status(200);
-        res.json(docs);
+    Hotel.find();//find everything
+    Hotel.skip(offset); //skip a certain number
+    Hotel.limit(count);//limit it to a certain number
+    Hotel.exec(function(err, hotels){//execute query
+        console.log("Found hotels ", hotels.length);//callback will get returned hotels value
+        res.json(hotels); //spit value out as json
     });
+    
+    //below has been replaced by above in Lecture 28
+    // var docs = collection.find();
+    // collection.find();
+    // collection.skip(offset);//# of documents we will skip
+    // collection.limit(count);//# of documents we want to return
+    // collection.toArray(function(err, docs){
+    //     console.log("Found hotels", docs);
+    //     res.status(200);
+    //     res.json(docs);
+    // });
 };
 
 module.exports.hotelsGetOne = function(req, res){
-    var db = dbconn.get();
-    var collection = db.collection('hotels');
+    //for Lecture28, below has been removed as they are references to the native driver
+    // var db = dbconn.get();
+    // var collection = db.collection('hotels');
     
     var hotelId = req.params.hotelId; //Id will be on the request object; URL parameters are put into another object on the request object called params; and then our URL parameter will be in there (so we type hotelId);
     // var thisHotel = hotelData[hotelId];//variable holds info about individual hotel, and uses the URL parameter as the location index on the hotelData array (which is the json object (an array itself))
     console.log("GET hotelId", hotelId);
     
-    collection.findOne({
-        _id : ObjectId(hotelId)
-    }, function(err, doc){
+    //The native driver below has been updated for Lecture 28, as Hotel is our model
+    // collection.findOne({
+    //     _id : ObjectId(hotelId)
+    // }, function(err, doc){
+    //     res.status(200);
+    //     res.json( doc ); //test localhost:3000/api/hotels/5, or 3, 1 to get individual hotel info
+    // })
+    Hotel.findById(hotelId);
+    Hotel.exec(function(err, doc){
         res.status(200);
-        res.json( doc ); //test localhost:3000/api/hotels/5, or 3, 1 to get individual hotel info
-    })
+        res.json( doc );
+    });
     
 };
 
