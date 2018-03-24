@@ -12,6 +12,8 @@ var ctrlReviews = require('../controllers.reviews.controllers.js');
 
 router.route('/hotels');
 router.get(ctrlHotels.hotelsGetAll); //to map controller to a route
+router.post(ctrlHotels.hotelsAddOne);
+
 // router.get(function(req, res){ //GET method - now, with the controller we are replacing this inline function assigned to the GET method with a call to the controller function 
 //     console.log("GET the json");
 //     res.status(200);
@@ -22,8 +24,8 @@ router.route('/hotels/:hotelId');//to define parameters in express, use colon an
 //and the hotelId is a parameter that controller can access - 1)create a controller to work with this route - define controller name
 router.get(ctrlHotels.hotelsGetOne); //now create corresponding controller in hotels.controllers.js file
 
-router.route('/hotels/new');
-router.post(ctrlHotels.hotelsAddOne);
+// router.route('/hotels/new');
+// router.post(ctrlHotels.hotelsAddOne);
 
 // router.post(function(req, res){ // POST method
 //     console.log("POST the json route");
@@ -35,6 +37,8 @@ router.post(ctrlHotels.hotelsAddOne);
 //GET /api/hotels/12345/reviews
 router.route('/hotels/:hotelId/reviews');
 router.get(ctrlReviews.reviewsGetAll);
+router.post(ctrlReviews.reviewAddOne);
+
 
 //GET /api/hotels/12345/reviews/54321
 router.route('/hotels/:hotelId/reviews/:reviewId');
