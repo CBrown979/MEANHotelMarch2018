@@ -12,6 +12,30 @@
 var mongoose = require('mongoose');
 var Hotel = mongoose.model('Hotel');
 
+var runGeoQuery = function(req, res){
+    var lng = parseFloat(req.query.lng);
+    var lat = parseFloat(req.query.lat);
+    
+    // A geoJSON point
+    var point = {
+        type: "Point",
+        coordinates: [lng, lat]
+    };
+    
+    var geoOptions = {
+        spherical: true,
+        maxDistance: 2000,
+        num: 5
+    };
+    
+    Hotel.geoNear(point, geoOptions, function(err, results, stats){
+        console.log("Geo results", results);
+        console.log("Geo stats", stats);
+        res.status(200);
+        res.json( results );
+    });
+};
+
 module.exports.hotelsGetAll = function(req, res){
     //for Lecture28, below has been removed as they are references to the native driver
     // var db = dbconn.get();
